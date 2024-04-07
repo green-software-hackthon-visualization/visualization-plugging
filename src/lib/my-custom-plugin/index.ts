@@ -7,7 +7,7 @@ import {ERRORS} from '../utils/errors';
 import {z} from 'zod';
 import {validate} from '../utils/validations';
 
-const {MakeDirectoryError, InputValidationError} = ERRORS;
+const {WriteFileError, InputValidationError} = ERRORS;
 
 export const MyCustomPlugin = (): PluginInterface => {
   const metadata = {
@@ -44,7 +44,7 @@ export const MyCustomPlugin = (): PluginInterface => {
         }
         fs.writeFileSync(filePath, fileContent, {flag: 'w'});
       } catch (err) {
-        throw new MakeDirectoryError(
+        throw new WriteFileError(
           `Failed to write HTML to ${outputPath} ${err}`
         );
       }

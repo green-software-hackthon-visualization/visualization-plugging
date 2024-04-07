@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {MyCustomPlugin} from '../../../lib';
 import {ERRORS} from '../../../lib/utils/errors';
-const {InputValidationError} = ERRORS;
+
+const {InputValidationError, WriteFileError} = ERRORS;
 
 jest.mock('fs');
 jest.mock('path');
@@ -88,6 +89,33 @@ describe('MyCustomPlugin', () => {
       expect(error).toBeInstanceOf(InputValidationError);
       expect(error).toEqual(
         new InputValidationError('Configuration data is missing')
+      );
+    }
+  });
+
+  it('throws an error when a file writing failed', async () => {
+    (fs.writeFileSync as jest.Mock).mockImplementation(() => {
+      throw new Error('Permission denied');
+    });
+    const myCustomPlugin = MyCustomPlugin();
+
+    const input = [
+      {
+        timestamp: '2023-12-12T00:00:00.000Z',
+        duration: 10,
+      },
+    ];
+
+    expect.assertions(2);
+
+    try {
+      await myCustomPlugin.execute(input, standardConfig);
+    } catch (error) {
+      expect(error).toBeInstanceOf(WriteFileError);
+      expect(error).toEqual(
+        new WriteFileError(
+          `Failed to write HTML to mock-output-path Error: Permission denied`
+        )
       );
     }
   });
