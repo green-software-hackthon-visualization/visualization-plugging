@@ -1,24 +1,41 @@
-import {MyCustomPlugin} from '../../../lib/my-custom-plugin';
+import * as fs from 'fs';
+import * as path from 'path';
+import {MyCustomPlugin} from '../../../lib';
 
-describe('lib/my-custom-plugin: ', () => {
-  describe('MyCustomPlugin(): ', () => {
-    it('has metadata field.', () => {
-      const pluginInstance = MyCustomPlugin();
+jest.mock('fs');
+jest.mock('path');
 
-      expect(pluginInstance).toHaveProperty('metadata');
-      expect(pluginInstance).toHaveProperty('execute');
-      expect(pluginInstance.metadata).toHaveProperty('kind');
-      expect(typeof pluginInstance.execute).toBe('function');
-    });
+describe('MyCustomPlugin', () => {
+  const outputPath = 'mock-output-path';
+  const inputs = [
+    {
+      timestamp: '2023-12-12T00:00:00.000Z',
+      duration: 10,
+      energy: 10,
+      carbon: 2,
+    },
+    {
+      timestamp: '2023-12-12T00:00:10.000Z',
+      duration: 30,
+      energy: 20,
+      carbon: 5,
+    },
+  ];
+  const standardConfig = {
+    'output-path': outputPath,
+  };
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    describe('execute(): ', () => {
-      it('applies logic on provided inputs array.', async () => {
-        const pluginInstance = MyCustomPlugin();
-        const inputs = [{}];
+  it('should create file and directory with correct inputs', async () => {
+    const myCustomPlugin = MyCustomPlugin();
+    const result = await myCustomPlugin.execute(inputs, standardConfig);
 
-        const response = await pluginInstance.execute(inputs, {});
-        expect(response).toEqual(inputs);
-      });
-    });
+    expect.assertions(3);
+
+    expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+    expect(path.dirname).toHaveBeenCalledTimes(1);
+    expect(result).toStrictEqual(inputs);
   });
 });
