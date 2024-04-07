@@ -6,6 +6,8 @@ import {ConfigParams} from '../types/common';
 import {ERRORS} from '../utils/errors';
 import {z} from 'zod';
 import {validate} from '../utils/validations';
+import {generateChartOptions, htmlFile} from './echarts';
+// import {generateChartOptions, htmlFile} from './echarts';
 
 const {WriteFileError, InputValidationError} = ERRORS;
 
@@ -29,8 +31,9 @@ export const MyCustomPlugin = (): PluginInterface => {
       return validate<z.infer<typeof schema>>(schema, config);
     };
 
-    const createFileContent = (inputs: PluginParams) => {
-      return inputs.toString();
+    const createFileContent = (inputs: PluginParams[]) => {
+      const options = generateChartOptions(inputs);
+      return htmlFile(options);
     };
 
     const createFile = (
