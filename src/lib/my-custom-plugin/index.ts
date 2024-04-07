@@ -1,45 +1,64 @@
-import {YourGlobalConfig} from './types';
 import {PluginInterface, PluginParams} from '../types/interface';
 import * as fs from 'fs';
+import {PathLike} from 'fs';
 import * as path from 'path';
+import {ConfigParams} from '../types/common';
+import {ERRORS} from '../utils/errors';
+import {z} from 'zod';
+import {validate} from '../utils/validations';
 
-export const MyCustomPlugin = (
-  globalConfig: YourGlobalConfig
-): PluginInterface => {
+const {MakeDirectoryError, InputValidationError} = ERRORS;
+
+export const MyCustomPlugin = (): PluginInterface => {
   const metadata = {
     kind: 'execute',
   };
-  const execute = async (inputs: PluginParams[]): Promise<PluginParams[]> => {
-    const dirPath = path.join(__dirname, 'outputs');
-    const filePath = path.join(__dirname, 'outputs', 'view.html');
-    console.log('View html file path: ', filePath);
-    const createFile = () => {
+  const execute = async (
+    inputs: PluginParams[],
+    config?: ConfigParams
+  ): Promise<PluginParams[]> => {
+    const validateConfig = (config?: ConfigParams) => {
+      if (!config) {
+        throw new InputValidationError('Configuration data is missing');
+      }
+
+      const schema = z.object({
+        'output-path': z.string(),
+      });
+
+      return validate<z.infer<typeof schema>>(schema, config);
+    };
+
+    const createFileContent = (inputs: PluginParams) => {
+      return inputs.toString();
+    };
+
+    const createFile = (
+      dirPath: PathLike,
+      filePath: PathLike,
+      fileContent: any
+    ) => {
       try {
         if (!fs.existsSync(dirPath)) {
           fs.mkdirSync(dirPath);
         }
         if (!fs.existsSync(filePath)) {
-          fs.writeFileSync(filePath, '');
-          console.log('View html already created');
-        } else {
-          console.log('View html already existed');
+          fs.writeFileSync(filePath, fileContent);
         }
       } catch (err) {
-        console.error('Error while creating file:', err);
+        throw new MakeDirectoryError(
+          `Failed to write HTML to ${outputPath} ${err}`
+        );
       }
     };
-    createFile();
+    const validatedConfig = validateConfig(config);
+    const {'output-path': outputPath} = validatedConfig;
+    const dirPath = path.dirname(outputPath);
 
-    function fillFileContent(input: PluginParams) {
-      console.log(input);
-    }
+    const content = createFileContent(inputs);
+    createFile(dirPath, outputPath, content);
 
-    return inputs.map(input => {
-      fillFileContent(input);
-      globalConfig;
-
-      return input;
-    });
+    return inputs;
   };
 
   return {
