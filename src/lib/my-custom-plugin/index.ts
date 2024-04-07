@@ -42,9 +42,7 @@ export const MyCustomPlugin = (): PluginInterface => {
         if (!fs.existsSync(dirPath)) {
           fs.mkdirSync(dirPath);
         }
-        if (!fs.existsSync(filePath)) {
-          fs.writeFileSync(filePath, fileContent);
-        }
+        fs.writeFileSync(filePath, fileContent, {flag: 'w'});
       } catch (err) {
         throw new MakeDirectoryError(
           `Failed to write HTML to ${outputPath} ${err}`

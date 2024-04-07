@@ -28,12 +28,33 @@ describe('MyCustomPlugin', () => {
     jest.clearAllMocks();
   });
 
-  it('should create file and directory with correct inputs', async () => {
+  it('should create file and directory with correct inputs when dir is not existed', async () => {
+    const mockWriteFileSync = jest
+      .spyOn(fs, 'existsSync')
+      .mockImplementation(() => false);
     const myCustomPlugin = MyCustomPlugin();
     const result = await myCustomPlugin.execute(inputs, standardConfig);
 
-    expect.assertions(3);
+    expect.assertions(5);
 
+    expect(mockWriteFileSync).toHaveBeenCalledTimes(1);
+    expect(fs.mkdirSync).toHaveBeenCalledTimes(1);
+    expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+    expect(path.dirname).toHaveBeenCalledTimes(1);
+    expect(result).toStrictEqual(inputs);
+  });
+
+  it('should create file and directory with correct inputs when dir is existed', async () => {
+    const mockWriteFileSync = jest
+      .spyOn(fs, 'existsSync')
+      .mockImplementation(() => true);
+    const myCustomPlugin = MyCustomPlugin();
+    const result = await myCustomPlugin.execute(inputs, standardConfig);
+
+    expect.assertions(5);
+
+    expect(mockWriteFileSync).toHaveBeenCalledTimes(1);
+    expect(fs.mkdirSync).toHaveBeenCalledTimes(0);
     expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
     expect(path.dirname).toHaveBeenCalledTimes(1);
     expect(result).toStrictEqual(inputs);
