@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {MyCustomPlugin} from '../../../lib';
+import {ERRORS} from '../../../lib/utils/errors';
+const {InputValidationError} = ERRORS;
 
 jest.mock('fs');
 jest.mock('path');
@@ -58,5 +60,35 @@ describe('MyCustomPlugin', () => {
     expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
     expect(path.dirname).toHaveBeenCalledTimes(1);
     expect(result).toStrictEqual(inputs);
+  });
+
+  it('throws an error when out put html config is not provided', async () => {
+    const myCustomPlugin = MyCustomPlugin();
+
+    const input = [
+      {
+        timestamp: '2023-12-12T00:00:00.000Z',
+        duration: 10,
+        energy: 10,
+        carbon: 2,
+      },
+      {
+        timestamp: '2023-12-12T00:00:10.000Z',
+        duration: 30,
+        energy: 20,
+        carbon: 5,
+      },
+    ];
+
+    expect.assertions(2);
+
+    try {
+      await myCustomPlugin.execute(input);
+    } catch (error) {
+      expect(error).toBeInstanceOf(InputValidationError);
+      expect(error).toEqual(
+        new InputValidationError('Configuration data is missing')
+      );
+    }
   });
 });
