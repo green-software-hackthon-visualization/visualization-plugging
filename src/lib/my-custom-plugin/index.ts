@@ -1,5 +1,7 @@
 import {YourGlobalConfig} from './types';
 import {PluginInterface, PluginParams} from '../types/interface';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export const MyCustomPlugin = (
   globalConfig: YourGlobalConfig
@@ -7,27 +9,32 @@ export const MyCustomPlugin = (
   const metadata = {
     kind: 'execute',
   };
-
-  /**
-   * Start generate html file
-   */
   const execute = async (inputs: PluginParams[]): Promise<PluginParams[]> => {
-    function generateFile(filePath: string) {
-      // Create file in user dir
-      console.log(filePath);
-    }
+    const dirPath = path.join(__dirname, 'outputs');
+    const filePath = path.join(__dirname, 'outputs', 'view.html');
+    console.log('View html file path: ', filePath);
+    const createFile = () => {
+      try {
+        if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath);
+        }
+        if (!fs.existsSync(filePath)) {
+          fs.writeFileSync(filePath, '');
+          console.log('View html already created');
+        } else {
+          console.log('View html already existed');
+        }
+      } catch (err) {
+        console.error('Error while creating file:', err);
+      }
+    };
+    createFile();
 
     function fillFileContent(input: PluginParams) {
-      // Get we needed data from input
-      // Start fill file content
       console.log(input);
     }
 
-    const filePath = '';
-    generateFile(filePath);
     return inputs.map(input => {
-      // Validate input, it is have our needed parameter? (energy, timestamp...)
-      // Get generate file path, need considerate this is come from user or us?
       fillFileContent(input);
       globalConfig;
 
