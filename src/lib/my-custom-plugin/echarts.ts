@@ -1,18 +1,18 @@
 import {PluginParams} from '../types/interface';
 
-const keyUnits = {
+const keyUnits: PluginParams = {
   'cpu/utilization': '%',
   'cpu/thermal-design-power': 'W',
   'cpu/energy': 'J',
   'cpu/number-cores': 'cores',
   'carbon-embodied': 'kgCO2e',
-  'energy': 'J',
+  energy: 'J',
   'vcpus-allocated': 'cores',
   'vcpus-total': 'cores',
   'memory-available': 'GB',
   'network/data/bytes': 'bytes',
   'carbon-operational': 'kgCO2e',
-  'carbon': 'kgCO2e',
+  carbon: 'kgCO2e',
   'carbon-product': 'kgCO2e',
   'memory/utilization': '%',
   'memory/capacity': 'GB',
@@ -24,7 +24,7 @@ const keyUnits = {
   'energy-doubled': 'J',
   'cpu-times-duration': 's',
   'energy-product': 'J',
-  'requests': 'count',
+  requests: 'count',
   'grid/carbon-intensity': 'gCO2/kWh',
   'device/emissions-embodied': 'kgCO2e',
   'time-reserved': 's',
@@ -82,7 +82,8 @@ const getOption = ({
       },
     },
     grid: {
-      right: '20%',
+      left: '10%',
+      right: '25%',
     },
     toolbox: {
       feature: {
@@ -100,7 +101,6 @@ const getOption = ({
         axisTick: {
           alignWithLabel: true,
         },
-        // prettier-ignore
         data: timestampData,
       },
     ],
@@ -109,6 +109,7 @@ const getOption = ({
         type: 'value',
         name: legendData[0],
         position: 'right',
+        show: Boolean(legendData[0]),
         alignTicks: true,
         axisLine: {
           show: true,
@@ -117,15 +118,15 @@ const getOption = ({
           },
         },
         axisLabel: {
-          formatter: '{value} ml',
+          formatter: '{value}' + keyUnits[legendData[0]],
         },
       },
       {
         type: 'value',
         name: legendData[1],
-        position: 'right',
+        position: 'left',
+        show: Boolean(legendData[1]),
         alignTicks: true,
-        offset: 80,
         axisLine: {
           show: true,
           lineStyle: {
@@ -133,13 +134,15 @@ const getOption = ({
           },
         },
         axisLabel: {
-          formatter: '{value} ml',
+          formatter: '{value}' + keyUnits[legendData[1]],
         },
       },
       {
         type: 'value',
         name: legendData[2],
-        position: 'left',
+        offset: 150,
+        position: 'right',
+        show: Boolean(legendData[2]),
         alignTicks: true,
         axisLine: {
           show: true,
@@ -148,7 +151,7 @@ const getOption = ({
           },
         },
         axisLabel: {
-          formatter: '{value} °C',
+          formatter: '{value}' + keyUnits[legendData[2]],
         },
       },
     ],
@@ -176,7 +179,22 @@ const getOption = ({
 
 export const generateChartOptions = (option: PluginParams[]) => {
   const timestampData = option.map(obj => timeFormat(obj.timestamp));
-  const excludedKeys = ['timestamp', 'region', 'duration'];
+  const excludedKeys = [
+    'timestamp',
+    'region',
+    'duration',
+    'instance-type',
+    'cpu/name',
+    'provider',
+    'cloud/vendor',
+    'cloud/instance-type',
+    'physical-processor',
+    'common-key',
+    'resources-reserved',
+    'resources-total',
+    'sci',
+    'functional-unit-time',
+  ];
   const showKey = keyArrays(option, excludedKeys);
   const showTargets = valuseObject(option, excludedKeys);
   const options: PluginParams[] = [];
