@@ -227,7 +227,7 @@ export const htmlFile = (options: PluginParams[]) => {
        for (let i = 0; i < currentOptions.length; i++) {
         const chartContainer = document.createElement('div');
         chartContainer.id = 'chart-main' + i;
-        chartContainer.style.width = '1000px';
+        chartContainer.style.width = '1200px';
         chartContainer.style.height = '600px';
         chartContainer.style.padding = '10px 0';
         document.getElementById('visualizationCharts').appendChild(chartContainer);
