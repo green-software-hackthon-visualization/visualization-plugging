@@ -1,5 +1,35 @@
 import {PluginParams} from '../types/interface';
 
+const keyUnits = {
+  'cpu/utilization': '%',
+  'cpu/thermal-design-power': 'W',
+  'cpu/energy': 'J',
+  'cpu/number-cores': 'cores',
+  'carbon-embodied': 'kgCO2e',
+  'energy': 'J',
+  'vcpus-allocated': 'cores',
+  'vcpus-total': 'cores',
+  'memory-available': 'GB',
+  'network/data/bytes': 'bytes',
+  'carbon-operational': 'kgCO2e',
+  'carbon': 'kgCO2e',
+  'carbon-product': 'kgCO2e',
+  'memory/utilization': '%',
+  'memory/capacity': 'GB',
+  'memory/energy': 'J',
+  'network/data-in': 'bytes',
+  'network/data-out': 'bytes',
+  'network/energy': 'J',
+  'energy-sum': 'J',
+  'energy-doubled': 'J',
+  'cpu-times-duration': 's',
+  'energy-product': 'J',
+  'requests': 'count',
+  'grid/carbon-intensity': 'gCO2/kWh',
+  'device/emissions-embodied': 'kgCO2e',
+  'time-reserved': 's',
+  'device/expected-lifespan': 's',
+};
 const timeFormat = (isoDateTime: string) => {
   const dateObject = new Date(isoDateTime);
   const localDateTimeString = dateObject.toLocaleString();
