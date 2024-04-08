@@ -7,11 +7,10 @@ import {ERRORS} from '../utils/errors';
 import {z} from 'zod';
 import {validate} from '../utils/validations';
 import {generateChartOptions, htmlFile} from './echarts';
-// import {generateChartOptions, htmlFile} from './echarts';
 
 const {WriteFileError, InputValidationError} = ERRORS;
 
-export const MyCustomPlugin = (): PluginInterface => {
+export const VisualizationPlugin = (): PluginInterface => {
   const metadata = {
     kind: 'execute',
   };

@@ -1,1 +1,1 @@
-export {MyCustomPlugin} from './my-custom-plugin';
+export {VisualizationPlugin} from './my-custom-plugin';

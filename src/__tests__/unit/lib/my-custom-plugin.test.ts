@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {MyCustomPlugin} from '../../../lib';
+import {VisualizationPlugin} from '../../../lib';
 import {ERRORS} from '../../../lib/utils/errors';
 
 const {InputValidationError, WriteFileError} = ERRORS;
@@ -35,7 +35,7 @@ describe('MyCustomPlugin', () => {
     const mockWriteFileSync = jest
       .spyOn(fs, 'existsSync')
       .mockImplementation(() => false);
-    const myCustomPlugin = MyCustomPlugin();
+    const myCustomPlugin = VisualizationPlugin();
     const result = await myCustomPlugin.execute(inputs, standardConfig);
 
     expect.assertions(5);
@@ -51,7 +51,7 @@ describe('MyCustomPlugin', () => {
     const mockWriteFileSync = jest
       .spyOn(fs, 'existsSync')
       .mockImplementation(() => true);
-    const myCustomPlugin = MyCustomPlugin();
+    const myCustomPlugin = VisualizationPlugin();
     const result = await myCustomPlugin.execute(inputs, standardConfig);
 
     expect.assertions(5);
@@ -64,7 +64,7 @@ describe('MyCustomPlugin', () => {
   });
 
   it('throws an error when out put html config is not provided', async () => {
-    const myCustomPlugin = MyCustomPlugin();
+    const myCustomPlugin = VisualizationPlugin();
 
     const input = [
       {
@@ -97,7 +97,7 @@ describe('MyCustomPlugin', () => {
     (fs.writeFileSync as jest.Mock).mockImplementation(() => {
       throw new Error('Permission denied');
     });
-    const myCustomPlugin = MyCustomPlugin();
+    const myCustomPlugin = VisualizationPlugin();
 
     const input = [
       {
