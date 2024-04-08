@@ -114,7 +114,7 @@ describe('MyCustomPlugin', () => {
       expect(error).toBeInstanceOf(WriteFileError);
       expect(error).toEqual(
         new WriteFileError(
-          `Failed to write HTML to mock-output-path Error: Permission denied`
+          'Failed to write HTML to mock-output-path Error: Permission denied'
         )
       );
     }
