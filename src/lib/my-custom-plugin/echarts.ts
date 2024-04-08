@@ -158,12 +158,12 @@ const getOption = ({
     series: [
       {
         name: legendData[0],
-        type: 'bar',
+        type: 'line',
         data: valuesData[legendData[0]],
       },
       {
         name: legendData[1],
-        type: 'bar',
+        type: 'line',
         yAxisIndex: 1,
         data: valuesData[legendData[1]],
       },
@@ -217,7 +217,7 @@ export const htmlFile = (options: PluginParams[]) => {
      <meta charset="utf-8" />
      <title>ECharts</title>
      <div id="visualizationCharts" style="display:flex;flex-flow: column;align-items: center; padding:10px 0">
-          <h2> Visualization Charts </h2>
+          <h2> GFS Visualization Charts </h2>
      </div>
      <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
    </head>
