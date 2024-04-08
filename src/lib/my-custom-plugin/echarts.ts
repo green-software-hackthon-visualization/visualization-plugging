@@ -215,7 +215,7 @@ export const htmlFile = (options: PluginParams[]) => {
  <html>
    <head>
      <meta charset="utf-8" />
-     <title>ECharts</title>
+     <title>GFS Visualization Charts</title>
      <div id="visualizationCharts" style="display:flex;flex-flow: column;align-items: center; padding:10px 0">
           <h2> GFS Visualization Charts </h2>
      </div>
